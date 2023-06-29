@@ -70,8 +70,8 @@ func main() {
 		log.Fatal(err)
 	}
 	ctx := context.Background()
-	accountID := "680bdb4c4755e7d9c0839b8377d9aa3e"
-	zoneID, err := api.ZoneIDByName("easybrain.com")
+	accountID := os.Getenv("CF_API_ACCOUNTID")
+	zoneID, err := api.ZoneIDByName("CF_API_ZONEID")
 
 	cli := cfLoadBalancerPool{
 		Api:       api,
