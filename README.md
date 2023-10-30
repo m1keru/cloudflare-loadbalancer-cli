@@ -13,7 +13,7 @@ CF_API_ZONEID=example.com #Zone you want to manage (Optional)
 
 Examples
 ```
-./cf -update -pool example-test -origin app-1 -disabled=false
+./cf -update -pool example-test -origin app-1 -enabled=false
 ./cf -list
 ```
 
