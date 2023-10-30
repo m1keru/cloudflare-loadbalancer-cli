@@ -24,7 +24,7 @@ func (pool cfLoadBalancerPool) updateCfLoadBalancerPool(poolName string, originN
 			fmt.Printf("lbp.Name: %v\n", lbp.Name)
 			var lbo_new []cloudflare.LoadBalancerOrigin
 			for _, lbo := range lbp.Origins {
-				fmt.Printf("	lbo: name: %s enabled: %t \n", lbo.Name, lbo.Enabled)
+				fmt.Printf("-pool %s -origin %s -state enabled:%t\n", lbp.Name, lbo.Name, lbo.Enabled)
 				if lbo.Name == originName && lbo.Enabled != originState {
 					lbo.Enabled = originState
 					fmt.Printf("		[change]: change state of origin %s to enabled:%t in:%s\n", lbo.Name, originState, lbp.Name)
@@ -50,7 +50,7 @@ func (pool cfLoadBalancerPool) listCfLoadBalancerPools() {
 	for _, lbp := range pools {
 		fmt.Printf("lbp.Name: %v\n", lbp.Name)
 		for _, lbo := range lbp.Origins {
-			fmt.Printf("  lbo: name: %s enabled: %t \n", lbo.Name, lbo.Enabled)
+			fmt.Printf("-pool %s -origin %s -state enabled:%t\n", lbp.Name, lbo.Name, lbo.Enabled)
 		}
 	}
 }
@@ -61,7 +61,7 @@ func main() {
 	update := flag.Bool("update", false, "update particular lb")
 	poolName := flag.String("pool", "", "load balancer pool name")
 	originName := flag.String("origin", "", "load balancer origin name")
-	originState := flag.String("state", "", "load balancer origin state [enable|disable]")
+	originState := flag.Bool("enabled", false, "load balancer origin state [true|false]")
 
 	flag.Parse()
 
@@ -85,21 +85,12 @@ func main() {
 		return
 	}
 	if *update {
-		if *poolName == "" || *originName == "" || *originState == "" {
+		if *poolName == "" || *originName == "" {
 			fmt.Println("Error: define all params")
 			flag.Usage()
 			return
 		}
-		var state bool
-		if *originState == "enable" {
-			state = true
-		} else if *originState == "disable" {
-			state = false
-		} else {
-			fmt.Println("Error: wrong state. variants: [enable|disable]")
-			return
-		}
-		cli.updateCfLoadBalancerPool(*poolName, *originName, state)
+		cli.updateCfLoadBalancerPool(*poolName, *originName, *originState)
 		return
 	}
 
