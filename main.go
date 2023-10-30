@@ -24,7 +24,7 @@ func (pool cfLoadBalancerPool) updateCfLoadBalancerPool(poolName string, originN
 			fmt.Printf("lbp.Name: %v\n", lbp.Name)
 			var lbo_new []cloudflare.LoadBalancerOrigin
 			for _, lbo := range lbp.Origins {
-				fmt.Printf("-pool %s -origin %s -enabled:%t\n", lbp.Name, lbo.Name, lbo.Enabled)
+				fmt.Printf("-pool %s -origin %s -enabled=%t\n", lbp.Name, lbo.Name, lbo.Enabled)
 				if lbo.Name == originName && lbo.Enabled != originState {
 					lbo.Enabled = originState
 					fmt.Printf("		[change]: change state of origin %s to enabled:%t in:%s\n", lbo.Name, originState, lbp.Name)
@@ -50,7 +50,7 @@ func (pool cfLoadBalancerPool) listCfLoadBalancerPools() {
 	for _, lbp := range pools {
 		fmt.Printf("lbp.Name: %v\n", lbp.Name)
 		for _, lbo := range lbp.Origins {
-			fmt.Printf("-pool %s -origin %s -enabled:%t\n", lbp.Name, lbo.Name, lbo.Enabled)
+			fmt.Printf("-pool %s -origin %s -enabled=%t\n", lbp.Name, lbo.Name, lbo.Enabled)
 		}
 	}
 }
